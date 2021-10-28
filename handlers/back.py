@@ -2,7 +2,6 @@ from aiogram import Bot, Dispatcher
 from aiogram import types
 #from ...utils.states import OrderDataUser, FSMContext, State
 from settings.client_connect import client
-from utils.get_time_ccel import from_your_tim_to_cell
 from utils.get_day import get_day_num_cell, get_all_days, normalize, get_all_days_with_new_items
 from utils.keyboards import actions_with_car_keybard, times_keyboard, days_keyboard, to_keyboard, back_keyboard
 from utils.sheet_get import get_sheet

@@ -7,11 +7,9 @@ from settings.client_connect import client
 async def backs_handlers(bot: Bot, dp: Dispatcher):
     @dp.message_handler(text='a')
     async def comm_back(message: types.Message):
-        print('a')
         id_person = message.chat.id
         await bot.send_message(chat_id=id_person, text='da')
         sheet = client.open('table1')
         sheet = sheet.worksheet('car info')
 
         all_products = sheet.col_values(1)
-        print(all_products)

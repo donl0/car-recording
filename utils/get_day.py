@@ -27,8 +27,6 @@ def make_cell(nowday):
     cell_num = 0
     for date in all_dates:
         cell_num += 1
-        print(date)
-        print(nowday)
         if date == nowday:
             break
     return cell_num
@@ -37,7 +35,7 @@ def make_cell(nowday):
 def get_all_days():
     sheet = get_sheet("TO", "car info")
     all_dates = sheet.row_values(1)
-    print(type(all_dates))
+    #print(type(all_dates))
     return all_dates
 
 

@@ -4,27 +4,35 @@ from aiogram.types import ReplyKeyboardRemove, \
 
 from utils.get_day import get_all_days
 from utils.times_from_sheet_get import get_times
-
+from utils.sheet_get import get_sheet
 item_back = InlineKeyboardButton(text='Назад')
 item_cancel = InlineKeyboardButton(text='Отменить всё')
 
 to_keyboard = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=True)
 item_to = InlineKeyboardButton(text='ТО')
-to_keyboard.add(item_to)
+item_clear = InlineKeyboardButton(text='Удалить запись')
+to_keyboard.add(item_to, item_clear)
 
 
 
 back_keyboard = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
 back_keyboard.add(item_back)
 
-def times_keyboard():
+
+def times_keyboard(day_cell):
     times_keyboard = ReplyKeyboardMarkup(row_width=3, resize_keyboard=True, one_time_keyboard=True)
     times_keyboard.add(item_back)
-    times_mass = get_times()
-    for time in times_mass:
-        item_time = InlineKeyboardButton(text=time)
+    #нам нужно узнать свободные ячейки
+    many_times = get_times()
+    i = 0
+    sheet = get_sheet("TO", "car info")
+    for time in many_times:
+        i += 1
+        val = sheet.cell(i, day_cell).value
+        if val == None:
+            item_time = InlineKeyboardButton(text=time)
+            times_keyboard.add(item_time)
 
-        times_keyboard.add(item_time)
     return times_keyboard
 
 
