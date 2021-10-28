@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 
 from handlers.sheet_pull import to_handler
 from handlers.start import start_handler
-from handlers.test import backs_handlers
+from handlers.back import back_handler
 from handlers.last_handler import last_handler
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
@@ -17,8 +17,8 @@ async def bot_settings(loop=None):
 
     await start_handler(bot, dp)
     await to_handler(bot, dp)
-    await backs_handlers(bot, dp)
-    await last_handler(bot, dp)
+    await back_handler(bot, dp)
+   #await last_handler(bot, dp)
 
     return bot, dp
 
