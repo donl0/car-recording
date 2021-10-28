@@ -57,18 +57,54 @@ async def to_handler(bot: Bot, dp: Dispatcher):
     @dp.message_handler(lambda message: message.text != 'Назад', state=OrderDataUser.action_wait)
     async def get_action(message: types.Message, state: FSMContext):
         id_person = message.chat.id
+
         await state.update_data(action=message.text)
+        if message.text == 'Ремонт':
+            await OrderDataUser.action_type_wait.set()
+            await message.reply(text='Напишите какой именно ремонт')
+        else:
+            user_data = await state.get_data()
+            sheet = get_sheet("TO", "car info")
+            sheet.update_cell(user_data['time'], user_data['day'], user_data['brand'])
+
+            num = 0
+            string = ''
+            mass_data = [normalize(user_data['day_str']), user_data['time_str'], user_data['brand'], user_data['distant'], user_data['action']]
+            for mess in mass_data:
+                num += 1
+                string += str(num)+'. *'+str(mess)+'*\n'
+            string += '(' + str(message['from']['first_name']) + ' '
+            try:
+                string += str(message['from']['last_name'])+')'
+            except:
+                pass
+            await message.reply(text=string, parse_mode='Markdown', reply_markup=to_keyboard)
+            await bot.send_message(chat_id='-1001728784459', text=string,
+                                   reply_markup=actions_with_car_keybard(), parse_mode='Markdown')
+            await state.finish()
+            #await bot.send_message(chat_id=id_person, text='Какое действие', reply_markup=actions_with_car_keybard())
+         #   await OrderDataUser.action_wait.set()
+
+    @dp.message_handler(lambda message: message.text != 'Назад', state=OrderDataUser.action_type_wait)
+    async def get_action(message: types.Message, state: FSMContext):
+        await state.update_data(action_type=message.text)
         user_data = await state.get_data()
         sheet = get_sheet("TO", "car info")
         sheet.update_cell(user_data['time'], user_data['day'], user_data['brand'])
 
         num = 0
         string = ''
-        mass_data = [normalize(user_data['day_str']), user_data['time_str'], user_data['brand'], user_data['distant'], user_data['action']]
+        mass_data = [normalize(user_data['day_str']), user_data['time_str'], user_data['brand'], user_data['distant'],
+                     user_data['action'], user_data['action_type']]
         for mess in mass_data:
             num += 1
-            string += str(num)+'. *'+str(mess)+'*\n'
+            string += str(num) + '. *' + str(mess) + '*\n'
+        string += '(' + str(message['from']['first_name']) + ' '
+        try:
+            string += str(message['from']['last_name'])+')'
+        except:
+            pass
+
         await message.reply(text=string, parse_mode='Markdown', reply_markup=to_keyboard)
+        await bot.send_message(chat_id='-1001728784459', text=string, reply_markup=actions_with_car_keybard(), parse_mode='Markdown')
         await state.finish()
-        #await bot.send_message(chat_id=id_person, text='Какое действие', reply_markup=actions_with_car_keybard())
-     #   await OrderDataUser.action_wait.set()

@@ -9,11 +9,10 @@ class OrderDataUser(StatesGroup):
     day_wait = State()
     action_wait = State()
 
-    product_sp2 = State()
+    day_wait2 = State()
+    time_wait2 = State()
+    action_type_wait = State()
 
-    after_search_sklad = State()
-    search_sklad_str = State()
-    product_sklad1 = State()
     product_sklad2 = State()
 
     sklad_keyb_st = State()

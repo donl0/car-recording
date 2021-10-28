@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher
 
 
 from handlers.sheet_pull import to_handler
+from handlers.clear_cell import clear_cell_handler
 from handlers.start import start_handler
 from handlers.back import back_handler
 from handlers.last_handler import last_handler
@@ -17,6 +18,7 @@ async def bot_settings(loop=None):
 
     await start_handler(bot, dp)
     await to_handler(bot, dp)
+    await clear_cell_handler(bot, dp)
     await back_handler(bot, dp)
    #await last_handler(bot, dp)
 
