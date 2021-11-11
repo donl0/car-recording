@@ -16,8 +16,11 @@ def normalize(day):
         current_datetime = datetime.now()
         day = current_datetime.day
         mounth = current_datetime.month
-        mass_date = [day, mounth]
-        day = str(mass_date[0]) + '/' + str(mass_date[1])
+        year = current_datetime.year
+        if int(day) < 10:
+            day = '0'+str(day) + '.' + str(mounth)+'.'+str(year)
+        else:
+            day = str(day) + '.' + str(mounth) + '.' + str(year)
     return day
 
 

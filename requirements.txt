@@ -4,3 +4,4 @@ aiogram==2.11.2
 oauth2client==21.2.3
 google_auth_oauthlib
 gspread
+pymysql

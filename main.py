@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 
-
+from midlware.big_brother import BigBrother
 from handlers.sheet_pull import to_handler
 from handlers.clear_cell import clear_cell_handler
 from handlers.start import start_handler
@@ -20,13 +20,14 @@ async def bot_settings(loop=None):
     await to_handler(bot, dp)
     await clear_cell_handler(bot, dp)
     await back_handler(bot, dp)
-   #await last_handler(bot, dp)
+    await last_handler(bot, dp)
 
     return bot, dp
 
 
 async def polling():
     bot, dp = await bot_settings()
+    dp.middleware.setup(BigBrother())
     try:
         await dp.start_polling()
     finally:
@@ -34,6 +35,7 @@ async def polling():
 
 
 def handle():
+
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     while True:
