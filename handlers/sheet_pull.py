@@ -80,11 +80,23 @@ async def to_handler(bot: Bot, dp: Dispatcher):
                 string += str(message['from']['last_name'])+')'
             except:
                 pass
-            await message.reply(text=string, parse_mode='Markdown', reply_markup=to_keyboard)
-            await bot.send_message(chat_id=chat_to_send_id, text=string, reply_markup=types.ReplyKeyboardRemove(), parse_mode='Markdown')
+            group_mess = await bot.send_message(chat_id=chat_to_send_id, text=string,
+                                                parse_mode='Markdown')
+            group_mess_id = group_mess.message_id
+            print(group_mess_id)
+            action_keyboard = InlineKeyboardMarkup(row_width=3, resize_keyboard=True)
+            item_change = InlineKeyboardButton('Изменить машину', callback_data=rewrite_rec.new(action_name='rewrite',
+                                                                                                date=user_data['day'],
+                                                                                                time=user_data['time'],
+                                                                                                brand=user_data[
+                                                                                                    'brand'],
+                                                                                                group_data=group_mess_id))
+            action_keyboard.add(item_change)
+            await message.reply(text=string, parse_mode='Markdown', reply_markup=action_keyboard)
+            await bot.send_message(chat_id=id_person, text='бд обновлена', reply_markup=to_keyboard,
+                                   parse_mode='Markdown')
+
             await state.finish()
-            #await bot.send_message(chat_id=id_person, text='Какое действие', reply_markup=actions_with_car_keybard())
-         #   await OrderDataUser.action_wait.set()
 
     @dp.message_handler(lambda message: message.text != 'Назад', state=OrderDataUser.action_type_wait)
     async def get_action(message: types.Message, state: FSMContext):
@@ -105,12 +117,12 @@ async def to_handler(bot: Bot, dp: Dispatcher):
         except:
             pass
         #в беседу
-        group_mess = await bot.send_message(chat_id=chat_to_send_id, text=string, reply_markup=types.ReplyKeyboardRemove(),
+        group_mess = await bot.send_message(chat_id=chat_to_send_id, text=string,
                                parse_mode='Markdown')
         group_mess_id = group_mess.message_id
         print(group_mess_id)
         action_keyboard = InlineKeyboardMarkup(row_width=3, resize_keyboard=True)
-        item_change = InlineKeyboardButton('Изменить', callback_data=rewrite_rec.new(action_name='rewrite',
+        item_change = InlineKeyboardButton('Изменить машину', callback_data=rewrite_rec.new(action_name='rewrite',
                                                                                      date=user_data['day'],
                                                                                      time=user_data['time'],
                                                                                      brand=user_data['brand'],
