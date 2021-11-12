@@ -13,6 +13,7 @@ class OrderDataUser(StatesGroup):
     time_wait2 = State()
     action_type_wait = State()
 
+    model_change_wait = State()
     product_sklad2 = State()
 
     sklad_keyb_st = State()

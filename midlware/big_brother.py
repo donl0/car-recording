@@ -8,7 +8,8 @@ from settings.config import password
 
 class BigBrother(BaseMiddleware):
     async def on_pre_process_update(self, update: types.Update, date: dict):
-        id_person = update.message['from']['id']
+        #print(update)
+        id_person = update.message['from']['id'] if update.message else update.callback_query['from']['id']
         cursor.execute(f"SELECT user_id FROM key_access WHERE user_id='{id_person}'")
         user_info = cursor.fetchone()
         if user_info == None:
