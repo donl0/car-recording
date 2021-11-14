@@ -6,7 +6,7 @@ from settings.config import chat_to_send_id
 from utils.get_time_ccel import from_your_time_to_cell
 from utils.get_day import get_day_num_cell, get_all_days, normalize, get_all_days_with_new_items
 from utils.keyboards import actions_with_car_keybard, times_keyboard, days_keyboard, to_keyboard, back_keyboard
-from utils.logic import rewrite_rec
+from utils.logic import rewrite_rec, rewrite_date
 from utils.sheet_get import get_sheet
 from utils.states import OrderDataUser, FSMContext
 from utils.times_from_sheet_get import get_times
@@ -83,15 +83,22 @@ async def to_handler(bot: Bot, dp: Dispatcher):
             group_mess = await bot.send_message(chat_id=chat_to_send_id, text=string,
                                                 parse_mode='Markdown')
             group_mess_id = group_mess.message_id
-            print(group_mess_id)
             action_keyboard = InlineKeyboardMarkup(row_width=3, resize_keyboard=True)
             item_change = InlineKeyboardButton('Изменить машину', callback_data=rewrite_rec.new(action_name='rewrite',
                                                                                                 date=user_data['day'],
                                                                                                 time=user_data['time'],
+                                                                                                distant=user_data['distant'],
                                                                                                 brand=user_data[
                                                                                                     'brand'],
                                                                                                 group_data=group_mess_id))
-            action_keyboard.add(item_change)
+            item_change_date = InlineKeyboardButton('Изменить дату',
+                                                    callback_data=rewrite_date.new(action_name='rewrite_date',
+                                                                                   date=user_data['day'],
+                                                                                   brand=user_data['brand'],
+                                                                                   time=user_data['time'],
+                                                                                   distant=user_data['distant'],
+                                                                                   group_data=group_mess_id))
+            action_keyboard.add(item_change, item_change_date)
             await message.reply(text=string, parse_mode='Markdown', reply_markup=action_keyboard)
             await bot.send_message(chat_id=id_person, text='бд обновлена', reply_markup=to_keyboard,
                                    parse_mode='Markdown')
@@ -120,14 +127,22 @@ async def to_handler(bot: Bot, dp: Dispatcher):
         group_mess = await bot.send_message(chat_id=chat_to_send_id, text=string,
                                parse_mode='Markdown')
         group_mess_id = group_mess.message_id
-        print(group_mess_id)
         action_keyboard = InlineKeyboardMarkup(row_width=3, resize_keyboard=True)
         item_change = InlineKeyboardButton('Изменить машину', callback_data=rewrite_rec.new(action_name='rewrite',
                                                                                      date=user_data['day'],
                                                                                      time=user_data['time'],
                                                                                      brand=user_data['brand'],
+                                                                                            distant=user_data[
+                                                                                                'distant'],
                                                                                      group_data=group_mess_id))
-        action_keyboard.add(item_change)
+        item_change_date = InlineKeyboardButton('Изменить дату', callback_data=rewrite_date.new(action_name='rewrite_date',
+                                                                                            date=user_data['day'],
+                                                                                            brand=user_data['brand'],
+                                                                                            time=user_data['time'],
+                                                                                                distant=user_data[
+                                                                                                    'distant'],
+                                                                                            group_data=group_mess_id))
+        action_keyboard.add(item_change, item_change_date)
         await message.reply(text=string, parse_mode='Markdown', reply_markup=action_keyboard)
         await bot.send_message(chat_id=id_person, text='бд обновлена', reply_markup=to_keyboard,
                                parse_mode='Markdown')

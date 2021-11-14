@@ -58,3 +58,19 @@ async def back_handler(bot: Bot, dp: Dispatcher):
         # await bot.send_message(chat_id=id_person, text='Выберите день', reply_markup=days_keyboard())
         await message.reply(text='Выберите день', reply_markup=days_keyboard())
         await OrderDataUser.day_wait2.set()
+
+    @dp.message_handler(text='Назад', state=OrderDataUser.day_wait_change)
+    async def back_from_get_to(message: types.Message, state: FSMContext):
+        id_person = message.chat.id
+        await bot.send_message(chat_id=id_person,
+                               text='https://docs.google.com/spreadsheets/d/1C5YqE3QYlte15z6OsKF_cSVs-A9HxAkDIRs9oPQG--w/edit?usp=sharing',
+                               reply_markup=to_keyboard)
+        await state.finish()
+
+    @dp.message_handler(text='Назад', state=OrderDataUser.time_wait_change)
+    async def back_from_get_to(message: types.Message, state: FSMContext):
+        id_person = message.chat.id
+        await bot.send_message(chat_id=id_person,
+                               text='https://docs.google.com/spreadsheets/d/1C5YqE3QYlte15z6OsKF_cSVs-A9HxAkDIRs9oPQG--w/edit?usp=sharing',
+                               reply_markup=to_keyboard)
+        await state.finish()
