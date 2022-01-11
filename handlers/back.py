@@ -27,8 +27,10 @@ async def back_handler(bot: Bot, dp: Dispatcher):
     async def back_from_get_car_name(message: types.Message, state: FSMContext):
         id_person = message.chat.id
         await OrderDataUser.time_wait.set()
+        user_data = await state.get_data()
         # await bot.send_message(chat_id=id_person, text='Выберите время', reply_markup=times_keyboard())
-        await message.reply(text='Выберите время', reply_markup=times_keyboard())
+        #day
+        await message.reply(text='Выберите время', reply_markup=times_keyboard(user_data['day']))
 
     @dp.message_handler(text='Назад', state=OrderDataUser.distant_of_car)
     async def back_from_get_car_brand(message: types.Message, state: FSMContext):
@@ -68,6 +70,14 @@ async def back_handler(bot: Bot, dp: Dispatcher):
         await state.finish()
 
     @dp.message_handler(text='Назад', state=OrderDataUser.time_wait_change)
+    async def back_from_get_to(message: types.Message, state: FSMContext):
+        id_person = message.chat.id
+        await bot.send_message(chat_id=id_person,
+                               text='https://docs.google.com/spreadsheets/d/1C5YqE3QYlte15z6OsKF_cSVs-A9HxAkDIRs9oPQG--w/edit?usp=sharing',
+                               reply_markup=to_keyboard)
+        await state.finish()
+
+    @dp.message_handler(text='Назад')
     async def back_from_get_to(message: types.Message, state: FSMContext):
         id_person = message.chat.id
         await bot.send_message(chat_id=id_person,

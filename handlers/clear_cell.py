@@ -19,7 +19,7 @@ async def clear_cell_handler(bot: Bot, dp: Dispatcher):
         await message.reply(text='Выберите день', reply_markup=days_keyboard())
         await OrderDataUser.day_wait2.set()
 
-    @dp.message_handler(text=get_all_days_with_new_items(), state=OrderDataUser.day_wait2)
+    @dp.message_handler(state=OrderDataUser.day_wait2)
     async def get_day(message: types.Message, state: FSMContext):
         id_person = message.chat.id
         day_cell = get_day_num_cell(message.text)

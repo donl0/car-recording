@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
-from db.bd_cursor import cursor, conn
+from db.bd_cursor import cursor_connect
 from settings.config import password
 
 
@@ -11,6 +11,9 @@ class BigBrother(BaseMiddleware):
         #print(update)
         if update.message:
             print('1')
+            cursor_conn = cursor_connect()
+            cursor = cursor_conn[0]
+            conn = cursor_conn[1]
             id_person = update.message['from']['id']
             cursor.execute(f"SELECT user_id FROM key_access WHERE user_id='{id_person}'")
             user_info = cursor.fetchone()
@@ -29,6 +32,7 @@ class BigBrother(BaseMiddleware):
                     conn.commit()
                 else:
                     raise CancelHandler()
+            cursor.close()
         elif update.callback_query:
             print('2')
             id_person = update.callback_query.from_user.id

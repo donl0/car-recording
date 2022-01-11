@@ -18,10 +18,10 @@ async def bot_settings(loop=None):
     dp = Dispatcher(bot, storage=MemoryStorage())
 
     await start_handler(bot, dp)
+    await back_handler(bot, dp)
     await buttons_callback_handler(bot, dp)
     await to_handler(bot, dp)
     await clear_cell_handler(bot, dp)
-    await back_handler(bot, dp)
     await last_handler(bot, dp)
 
     return bot, dp

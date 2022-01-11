@@ -98,7 +98,7 @@ async def buttons_callback_handler(bot: Bot, dp: Dispatcher):
         await bot.send_message(query.from_user['id'], 'Выберите день', reply_markup=days_keyboard())
         await OrderDataUser.day_wait_change.set()
 
-    @dp.message_handler(text=get_all_days_with_new_items(), state=OrderDataUser.day_wait_change)
+    @dp.message_handler(state=OrderDataUser.day_wait_change)
     async def get_day(message: types.Message, state: FSMContext):
         id_person = message.chat.id
         day_cell = get_day_num_cell(message.text)
@@ -109,7 +109,7 @@ async def buttons_callback_handler(bot: Bot, dp: Dispatcher):
         await message.reply(text='Выберите время', reply_markup=times_keyboard(day_cell))
         await OrderDataUser.time_wait_change.set()
 
-    @dp.message_handler(text=get_times(), state=OrderDataUser.time_wait_change)
+    @dp.message_handler(state=OrderDataUser.time_wait_change)
     async def get_time_for_sheep(message: types.Message, state: FSMContext):
         id_person = message.chat.id
 

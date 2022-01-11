@@ -18,21 +18,31 @@ async def to_handler(bot: Bot, dp: Dispatcher):
     @dp.message_handler(lambda message: message.text == 'ТО', lambda message: message['chat']['type']!='supergroup')
     async def get_to(message: types.Message):
         id_person = message.chat.id
+        await OrderDataUser.day_wait.set()
         #await bot.send_message(chat_id=id_person, text='Выберите день', reply_markup=days_keyboard())
         await message.reply(text='Выберите день', reply_markup=days_keyboard())
-        await OrderDataUser.day_wait.set()
 
-    @dp.message_handler(text=get_all_days_with_new_items(), state=OrderDataUser.day_wait)
+    @dp.message_handler(state=OrderDataUser.day_wait)
     async def get_day(message: types.Message, state: FSMContext):
         id_person = message.chat.id
-        day_cell = get_day_num_cell(message.text)
-        await state.update_data(day=day_cell)
-        await state.update_data(day_str=message.text)
-        await OrderDataUser.time_wait.set()
-        #await bot.send_message(chat_id=id_person, text='Выберите время', reply_markup=times_keyboard())
-        await message.reply(text='Выберите время', reply_markup=times_keyboard(day_cell))
-
-    @dp.message_handler(text=get_times(), state=OrderDataUser.time_wait)
+        sheet = get_sheet("TO", "car info")
+        all_dates = sheet.row_values(1)
+        mass_for_new_items = all_dates.copy()
+        mass_for_new_items.append('Сегодня')
+        if message.text in mass_for_new_items:
+            id_person = message.chat.id
+            day_cell = get_day_num_cell(message.text)
+            await state.update_data(day=day_cell)
+            await state.update_data(day_str=message.text)
+            await OrderDataUser.time_wait.set()
+            #await bot.send_message(chat_id=id_person, text='Выберите время', reply_markup=times_keyboard())
+            await message.reply(text='Выберите время', reply_markup=times_keyboard(day_cell))
+        else:
+            await bot.send_message(chat_id=id_person,
+                                   text='https://docs.google.com/spreadsheets/d/1C5YqE3QYlte15z6OsKF_cSVs-A9HxAkDIRs9oPQG--w/edit?usp=sharing',
+                                   reply_markup=to_keyboard)
+            await state.finish()
+    @dp.message_handler(state=OrderDataUser.time_wait)
     async def get_time_for_sheep(message: types.Message, state: FSMContext):
         id_person = message.chat.id
 
