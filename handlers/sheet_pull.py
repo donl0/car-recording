@@ -18,9 +18,9 @@ async def to_handler(bot: Bot, dp: Dispatcher):
     @dp.message_handler(lambda message: message.text == 'ТО', lambda message: message['chat']['type']!='supergroup')
     async def get_to(message: types.Message):
         id_person = message.chat.id
-        await OrderDataUser.day_wait.set()
         #await bot.send_message(chat_id=id_person, text='Выберите день', reply_markup=days_keyboard())
         await message.reply(text='Выберите день', reply_markup=days_keyboard())
+        await OrderDataUser.day_wait.set()
 
     @dp.message_handler(state=OrderDataUser.day_wait)
     async def get_day(message: types.Message, state: FSMContext):

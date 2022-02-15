@@ -4,6 +4,7 @@ from utils.sheet_get import get_sheet
 
 
 def get_day_num_cell(day):
+    print(day)
     if day == 'Сегодня':
         nowday = normalize(day)
     else:
@@ -17,10 +18,13 @@ def normalize(day):
         day = current_datetime.day
         mounth = current_datetime.month
         year = current_datetime.year
+        if mounth<10:
+            mounth='0'+str(mounth)
         if int(day) < 10:
             day = '0'+str(day) + '.' + str(mounth)+'.'+str(year)
         else:
             day = str(day) + '.' + str(mounth) + '.' + str(year)
+        print(day)
     return day
 
 

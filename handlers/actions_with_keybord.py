@@ -100,6 +100,7 @@ async def buttons_callback_handler(bot: Bot, dp: Dispatcher):
 
     @dp.message_handler(state=OrderDataUser.day_wait_change)
     async def get_day(message: types.Message, state: FSMContext):
+        print('this3')
         id_person = message.chat.id
         day_cell = get_day_num_cell(message.text)
         await state.update_data(day=day_cell)
